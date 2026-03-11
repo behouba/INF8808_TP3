@@ -89,7 +89,15 @@ def get_daily_info(dataframe, arrond, year):
             The daily tree count data for that
             neighborhood and year.
     '''
-    filtered = dataframe[(dataframe['Arrond_Nom'] == arrond) & 
+    filtered = dataframe[(dataframe['Arrond_Nom'] == arrond) &
                          (dataframe['Date_Plantation'].dt.year == year)]
     daily_counts = filtered.groupby('Date_Plantation').size().reset_index(name='Counts')
+
+    if not daily_counts.empty:
+        full_range = pd.date_range(
+            start=daily_counts['Date_Plantation'].min(),
+            end=daily_counts['Date_Plantation'].max()
+        )
+        daily_counts = daily_counts.set_index('Date_Plantation').reindex(full_range, fill_value=0).rename_axis('Date_Plantation').reset_index()
+
     return daily_counts
