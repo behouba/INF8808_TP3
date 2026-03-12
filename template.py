@@ -1,9 +1,8 @@
 '''
-    Contains the template to use in the data visualization.
+Contains the template to use in the data visualization.
 '''
 import plotly.graph_objects as go
 import plotly.io as pio
-
 
 THEME = {
     'background_color': '#ffffff',
@@ -18,41 +17,72 @@ THEME = {
 }
 
 
-
 def create_custom_theme():
     '''
-        Adds a new layout template to pio's templates.
+    Adds a new layout template to pio's templates.
 
-        The template sets the font color and
-        font to the values defined above in
-        the THEME dictionary, using the dark
-        color.
+    The template sets the font color and
+    font to the values defined above in
+    the THEME dictionary, using the dark color.
 
-        The plot background and paper background
-        are the background color defined
-        above in the THEME dictionary.
+    The plot background and paper background
+    are the background color defined above in the THEME dictionary.
 
-        Also, sets the hover label to have a
-        background color and font size
-        as defined for the label in the THEME dictionary.
-        The hover label's font color is the same
-        as the theme's overall font color. The hover mode
-        is set to 'closest'.
+    Also, sets the hover label to have a background color and font size
+    as defined for the label in the THEME dictionary.
+    The hover label's font color is the same as the theme's overall font color.
+    The hover mode is set to 'closest'.
 
-        Sets the line chart's line color to the one
-        designated in the THEME dictionary. Also sets
-        the color scale to be used by the heatmap
-        to the one in the THEME dictionary.
+    Sets the line chart's line color to the one designated in the THEME dictionary.
+    Also sets the color scale to be used by the heatmap to the one in the THEME dictionary.
 
-        Specifies the x-axis ticks are tilted 45
-        degrees to the right.
+    Specifies the x-axis ticks are tilted 45 degrees to the right.
     '''
-    # TODO : Generate template described above
+    custom_template = go.layout.Template(
+        layout=go.Layout(
+            # Polices et couleurs globales
+            font=dict(
+                family=THEME['font_family'],
+                color=THEME['dark_color']
+            ),
+            # Arrière-plan
+            plot_bgcolor=THEME['background_color'],
+            paper_bgcolor=THEME['background_color'],
+            # Info-bulle
+            hoverlabel=dict(
+                bgcolor=THEME['label_background_color'],
+                font=dict(
+                    size=THEME['label_font_size'],
+                    color=THEME['dark_color']
+                )
+            ),
+            hovermode='closest',
+            # Axe X : ticks inclinés à 45 degrés
+            xaxis=dict(
+                tickangle=45
+            ),
+            # Colorscale pour la heatmap
+            coloraxis=dict(
+                colorscale=THEME['colorscale']
+            )
+        ),
+        # Couleur de la ligne du graphique linéaire
+        data=go.layout.template.Data(
+            scatter=[
+                go.Scatter(
+                    line=dict(color=THEME['line_chart_color'])
+                )
+            ]
+        )
+    )
+
+    pio.templates['custom_theme'] = custom_template
 
 
 def set_default_theme():
     '''
-        Sets the default theme to be a combination of the
-        'plotly_white' theme and our custom theme.
+    Sets the default theme to be a combination of the
+    'plotly_white' theme and our custom theme.
     '''
-    # TODO : Set default theme
+    create_custom_theme()
+    pio.templates.default = 'plotly_white+custom_theme'
